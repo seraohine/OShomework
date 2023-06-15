@@ -1,4 +1,3 @@
-
 #include"job.h"
 
 void FCFS(JOB job[], int quantity)
@@ -24,15 +23,19 @@ void FCFS(JOB job[], int quantity)
     printf("FCFS运行结果:\n");
     int sum_runtime = 0;
     double averruntime;
-    printf("-------------------------------------\n");
-    printf("作业编号   到达时间   开始时间   周转时间\n");
-    printf("-------------------------------------\n");
+    printf("--------------------------------------------------------\n");
+    printf("作业编号\t到达时间\t开始时间\t周转时间\n");
+    printf("--------------------------------------------------------\n");
     for(int i =0;i<quantity;i++)
     {
-        printf("%d   %d   %d   %d\n",job[i].id,job[i].reachTime,job[i].endtime-job[i].needTime,job[i].runtime);
+        printf("%-8d\t%-8d\t%-8d\t%-8d\n",job[i].id,job[i].reachTime,job[i].endtime-job[i].needTime,job[i].runtime);
+        wirtExcel(job, 2, i, 0);
         sum_runtime = sum_runtime +job[i].runtime;
     }
     averruntime = sum_runtime*1.0/quantity;
-    printf("平均周转时间:%.2f",averruntime);
+    printf("--------------------------------------------------------\n");
+    printf("平均周转时间:%.2f\n",averruntime);
+    wirtExcel(job, 5, 0, averruntime);
+
     printf("\n");
 }

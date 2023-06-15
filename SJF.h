@@ -57,13 +57,19 @@ void SJF(JOB job[], int quantity) {
         }
     }
 
-	printf("作业名   到达时间   运行时间   完成时间   周转时间\n");
+    printf("最短作业优先:\n");
+    printf("------------------------------------------------------------------------\n");
+	printf("作业编号\t到达时间\t运行时间\t完成时间\t周转时间\n");
+    printf("------------------------------------------------------------------------\n");
     for (i = 0; i < quantity; i++)
     {
 		pjzztime+=job[i].runtime;
-        printf(" %d\t     %d\t       %d\t  %d\t      %d\n",
+        printf("%-8d\t%-8d\t%-8d\t%-8d\t%-8d\n",
             job[i].id, job[i].reachTime, job[i].needTime, job[i].endtime, job[i].runtime);
+        wirtExcel(job, 3, i, 0);
     }
 	pjzztime=pjzztime*1.0/quantity;
-	printf("平均周转时间%.2f\n",pjzztime);
+    printf("------------------------------------------------------------------------\n");
+	printf("平均周转时间:%.2f\n\n",pjzztime);
+    wirtExcel(job, 5, 0, pjzztime);
 }

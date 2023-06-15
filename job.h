@@ -2,6 +2,7 @@
 #define job_h
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 #define MAXJOB 50
 
 int quantity = 0; //作业总数
@@ -57,8 +58,11 @@ void sort_reachTime(JOB *job) {
 
 //读取作业信息并输出
 void readJOBdata(JOB *job) {
+    char filename[20];
+    printf("请输入测试文件名:\n");
+    scanf("%s", filename);
     FILE* file;
-    file = fopen("job.txt", "rw");
+    file = fopen(filename, "rw");
     if (file != NULL) {
     int i = 0;
         while (!feof(file)) {
@@ -68,7 +72,8 @@ void readJOBdata(JOB *job) {
             i++;
         }
     } else {
-        printf("打开文件失败");
+        printf("打开文件失败,请检查输入文件名");
+        exit(0);
     }
 }
 
@@ -83,6 +88,49 @@ void showJobs(JOB job[]) {
         printf("%-8d\t%-8d\t%-8d\n", job[i].id, job[i].reachTime, job[i].needTime);
     }
     printf("-------------------------------------\n\n");
+}
+
+//将输出结果导出到Excel中
+void wirtExcel(JOB job[], int choice, int index, double roundTime) {
+    FILE *fp = NULL;
+    static int a = 0, b = 0, c = 0, d = 0;
+    fp = fopen("output.csv", "a");
+    if (choice == 1) {
+        if (a == 0) {
+            fprintf(fp, "\nHRRN\njobID,reachTime,startTime,waitTime,roundTime\n");
+            // fprintf(fp, "AverageRoundTime:,%.2lf\n", roundTime);
+            a++;
+        }
+        fprintf(fp, "%d,%d,%d,%d,%d\n", job[index].id, job[index].reachTime, job[index].startTime, job[index].waitTime, job[index].runtime);
+        
+    } else if (choice == 2) {
+        if (b == 0) {
+            fprintf(fp, "\nFCFS\njobID,reachTime,startTime,roundTime\n");
+            // fprintf(fp, "AverageRoundTime:,%.2lf\n", roundTime);
+            b++;
+        }
+        fprintf(fp, "%d,%d,%d,%d\n",job[index].id,job[index].reachTime,job[index].endtime-job[index].needTime,job[index].runtime);
+        
+    } else if (choice == 3) {
+        if (c == 0) {
+            fprintf(fp, "\nSJF\njobID,reachTime,runTime,startTime,roundTime\n");
+            // fprintf(fp, "AverageRoundTime:,%.2lf\n", roundTime);
+            c++;
+        }
+        fprintf(fp, "%d,%d,%d,%d,%d\n",
+            job[index].id, job[index].reachTime, job[index].needTime, job[index].endtime, job[index].runtime);
+        
+    } else if (choice == 4) {
+        if (d == 0) {
+            fprintf(fp, "\nPSJF\njobID,reachTime,startTime,roundTime\n");
+            // fprintf(fp, "AverageRoundTime:,%.2lf\n", roundTime);
+            d++;
+        }
+        fprintf(fp, "%d,%d,%d,%d\n", job[index].id, job[index].reachTime, job[index].startTime, job[index].runtime);
+    } else if (choice == 5) {
+        fprintf(fp, "AverageRoundTime:,%.2lf\n", roundTime);
+    }
+    fclose(fp);
 }
 
 #endif
